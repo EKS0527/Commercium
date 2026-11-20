@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Commercium</title>
+
+    <link rel="stylesheet" href="style.css" />
+
+    <!--- IV model display-->
+    <script
+      src="https://cdn.plot.ly/plotly-2.35.2.min.js"
+      charset="utf-8"
+    ></script>
+    <!-- JS mechanics, turned into a JSON  to display onto the model interpetation menu under the resource tab-->
+    <style>
+      body,
+      html {
+        overflow-y: auto !important;
+        height: 100%;
+      }
+
+      /* Half-size container scaling for the 3D surface plot */
+      .chart-container {
+        width: 100%;
+        max-width: 600px;
+        height: 300px;
+        margin-top: 20px;
+        background: #ffffff;
+        border-radius: 8px;
+        padding: 5px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      }
+      #surface-plot {
+        width: 100%;
+        height: 100%;
+      }
+
+      /* Clean inline formatting layout for custom sub-navigation tabs */
+      .resource-tabs {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 25px;
+        border-bottom: 2px solid #eaeaea;
+        padding-bottom: 10px;
+      }
+      .resource-tab-btn {
+        background: none;
+        border: none;
+        font-family: inherit;
+        font-size: 1rem;
+        font-weight: bold;
+        color: #888888;
+        cursor: pointer;
+        padding: 5px 10px;
+        transition: color 0.2s ease, border-bottom 0.2s ease;
+      }
+      .resource-tab-btn.tab-active {
+        color: #000000;
+        border-bottom: 2px solid #000000;
+        margin-bottom: -12px;
+      }
+
+      /* Structural template switcher logic rules */
+      .sub-content-panel {
+        display: none;
+      }
+      .sub-content-panel.sub-active {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-container">
+      <aside id="sidePanel" class="side-panel collapsed">
+        <button class="toggle-btn" onclick="togglePanel()">☰</button>
+        <div class="panel-content">
+          <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="#Resources">Resources</a></li>
+            <li><a href="#Demos">Demos</a></li>
+            <li><a href="#Files">Files</a></li>
+          </ul>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <h1
+          style="
+            text-align: right;
+            font-size: 3rem;
+            font-family: Tahoma, sans-serif;
+          "
+        >
+          <a href="#home" style="text-decoration: none; color: inherit"
+            >Commercium</a
+          >
+        </h1>
+
+        <section id="home" class="page"></section>
+
+        <section id="about" class="page">
+          <h2>About</h2>
+          <p>
+            Commercium is a project designed to make connections between the
+            financial world and socioeconomic events by utilizing coding 
+            and mathematical techniques such as text mining, implied volatility
+            models, and more!
+          </p>
+        </section>
+
+        <section id="contact" class="page">
+          <h2>Contact</h2>
+          <form
+            class="contact-form"
+            action="https://formspree.io"
+            method="POST"
+          >
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" required />
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required />
+            <label for="inquiry">Inquiry</label>
+            <textarea id="inquiry" name="inquiry" rows="5" required></textarea>
+            <button type="submit">Send</button>
+          </form>
+        </section>
+
+        <!-- Resource container, maintains css -->
+        <section id="Resources" class="page">
+          <!-- Tab Row Selector Engine Panel Interface -->
+          <div class="resource-tabs">
+            <button
+              class="resource-tab-btn tab-active"
+              onclick="switchResourceTab('books')"
+            >
+              Books
+            </button>
+            <button
+              class="resource-tab-btn"
+              onclick="switchResourceTab('models')"
+            >
+              Model Interpretation
+            </button>
+            <button
+              class="resource-tab-btn"
+              onclick="switchResourceTab('glossary')"
+            >
+              Glossary
+            </button>
+          </div>
+
+          <!-- Sub menu blocks -->
+          <!-- Books -->
+          <div id="sub-view-books" class="sub-content-panel sub-active">
+            <h2>Resources: Books</h2>
+            <p>
+              If you are curious at all as to how to replicate the models seen
+              in this project and apply the appropriate arithmatic to enhance
+              them you can use the following for your own research/personal
+              projects:
+            </p>
+            <div class="book-grid">
+              <div class="book" tabindex="0">
+                <img
+                  src="images/Python-for-data-analysis.jpg"
+                  alt="Python for Data Analysis"
+                />
+                <a
+                  class="book-link"
+                  href="https://wesmckinney.com"
+                  target="_blank"
+                  rel="noopener"
+                  >Read</a
+                >
+              </div>
+              <div class="book" tabindex="0">
+                <img
+                  src="images/R-for-data-science.jpg"
+                  alt="R for Data Science"
+                />
+                <a
+                  class="book-link"
+                  href="https://hadley.nz"
+                  target="_blank"
+                  rel="noopener"
+                  >Read</a
+                >
+              </div>
+              <div class="book" tabindex="0">
+                <img
+                  src="images/Python-for-Finance.jpg"
+                  alt="Python for Finance"
+                />
+                <a
+                  class="book-link"
+                  href="https://goodreads.com"
+                  target="_blank"
+                  rel="noopener"
+                  >Buy</a
+                >
+              </div>
+              <div class="book" tabindex="0">
+                <img
+                  src="images/Data-Science-for-Business.jpg"
+                  alt="Data Science for Business"
+                />
+                <a
+                  class="book-link"
+                  href="https://amazon.com"
+                  target="_blank"
+                  rel="noopener"
+                  >Buy</a
+                >
+              </div>
+              <div class="book" tabindex="0">
+                <img
+                  src="images/David-Spiegelhalter.jpg"
+                  alt="David Spiegelhalter"
+                />
+                <a
+                  class="book-link"
+                  href="https://amazon.com"
+                  target="_blank"
+                  rel="noopener"
+                  >Buy</a
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Model interpetationN -->
+          <div id="sub-view-models" class="sub-content-panel">
+            <h2>Resources: Model Interpretation</h2>
+            <p>
+              This view displays our calculated implicit volatility mapping
+              arrays across asset fields.
+            </p>
+            <div class="chart-container">
+              <div id="surface-plot"></div>
+            </div>
+          </div>
+
+          <!-- Glossary -->
+          <div id="sub-view-glossary" class="sub-content-panel">
+            <h2>Resources: Glossary</h2>
+            <p>
+              Included are definitions, formulas and other pieces of information
+              to improve understanding:
+            </p>
+
+            <hr />
+
+            <details>
+              <summary><strong>Options</strong></summary>
+              <p>
+                <strong>Options:</strong> A contract that gives the buyer the
+                right, however not the obligation, to buy/sell an underlying
+                asset at a set price prior to a predetermined date.
+              </p>
+              <ul>
+                <li>
+                  <strong>Call Options:</strong> The financial contract that
+                  grants the buyer the right, but not the obligation, to buy a
+                  specific amount of an underlying asset at a determined price
+                  before a specific date.
+                </li>
+                <br />
+                <li>
+                  <strong>Put Options:</strong> The financial contract that
+                  grants the buyer the right, but not the obligation, to sell a
+                  specific amount of an underlying asset at a determined price
+                  before a specific date.
+                </li>
+              </ul>
+            </details>
+
+            <hr />
+
+            <details>
+              <summary><strong>Key Options &amp; Market Terms</strong></summary>
+              <ul>
+                <li>
+                  <strong>Implied Volatility:</strong> The standard deviation of
+                  stock returns that is consistent with an option's market
+                  value.
+                </li>
+                <br />
+                <li>
+                  <strong>Moneyness:</strong> The relationship between the price
+                  of the underlying asset and an option's exercise price.
+                </li>
+                <br />
+                <li>
+                  <strong>Securities:</strong> Tradeable financial assets that
+                  corporations and governments use to raise capital from
+                  investors.
+                </li>
+                <br />
+                <li>
+                  <strong>Strike Price:</strong> Price at which stock or
+                  commodity underlying a call option or a put option can be
+                  purchased or sold during a specified period.
+                </li>
+                <br />
+                <li>
+                  <strong>Time to Expiration:</strong> Duration until the option
+                  contract expires.
+                </li>
+                <br />
+                <li>
+                  <strong>Underlying Stock Price:</strong> The current live
+                  market price of the specific stock or equity upon which a
+                  derivative contract—such as an option, warrant, or convertible
+                  security—is based.
+                </li>
+                <br />
+                <li>
+                  <strong>Volatility:</strong> Indicates how much and how
+                  quickly the value of an investment, market, or market sector
+                  changes.
+                </li>
+                <br />
+                <li>
+                  <strong>Volatility Smile:</strong> The variation of implied
+                  volatility with strike price.
+                </li>
+              </ul>
+            </details>
+
+            <hr />
+
+            <details>
+              <summary><strong>The Greeks</strong></summary>
+              <ul>
+                <li>
+                  <strong>Delta:</strong> Measures how much an option's price is
+                  expected to change per a $1.00 change in the price of an
+                  underlying stock. Call options range between 0 and +1.00,
+                  while put options range from 0 to -1.00. It also roughly
+                  estimates the probability of expiring in the money.
+                </li>
+                <br />
+                <li>
+                  <strong>Gamma:</strong> Rate of change in Delta when
+                  underlying stock moves by $1.00 (second derivative of option
+                  price). High gamma means Delta can shift very quickly, which
+                  is common for at-the-money options near expiration.
+                </li>
+                <br />
+                <li>
+                  <strong>Rho:</strong> Measures an option's sensitivity to
+                  changes in interest rates. It estimates how much an option's
+                  price will change for every 1% change in the risk-free
+                  interest rate.
+                </li>
+                <br />
+                <li>
+                  <strong>Theta:</strong> Measures the rate of time decay in an
+                  option's value as it gets closer to its expiration date,
+                  assuming all other factors remain constant. Theta is typically
+                  negative for option buyers because the option loses value each
+                  day.
+                </li>
+                <br />
+                <li>
+                  <strong>Vega:</strong> Measures an option's sensitivity to
+                  changes in the implied volatility of the underlying asset. It
+                  represents how much an option's price is expected to change
+                  for every 1% change in implied volatility.
+                </li>
+              </ul>
+            </details>
+          </div>
+        </section>
+
+        <section id="Demos" class="page">
+          <h2>Demos</h2>
+          <p>
+            This page contains all of the prototypes, notes and future plans for
+            commercium.
+          </p>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      let chartInitialized = false;
+
+      function togglePanel() {
+        const panel = document.getElementById("sidePanel");
+        if (panel) {
+          panel.classList.toggle("collapsed");
+        }
+      }
+      // IV model matrice =
+      const modelData = {
+        strikes: [
+          80.0, 82.105, 84.21, 86.315, 88.421, 90.526, 92.631, 94.736, 96.842,
+          98.947, 101.052, 103.157, 105.263, 107.368, 109.473, 111.578, 113.684,
+          115.789, 117.894, 120.0,
+        ],
+        expirations: [
+          0.1, 0.235, 0.371, 0.507, 0.642, 0.778, 0.914, 1.05, 1.185, 1.321,
+          1.457, 1.592, 1.728, 1.864, 2.0,
+        ],
+        iv_matrix: [
+          [
+            2.295, 1.896, 1.541, 1.231, 0.965, 0.743, 0.566, 0.433, 0.344, 0.3,
+            0.3, 0.344, 0.433, 0.566, 0.743, 0.965, 1.231, 1.541, 1.896, 2.295,
+          ],
+          [
+            2.288, 1.889, 1.534, 1.224, 0.958, 0.736, 0.559, 0.426, 0.338,
+            0.293, 0.293, 0.338, 0.426, 0.559, 0.736, 0.958, 1.224, 1.534,
+            1.889, 2.288,
+          ],
+          [
+            2.281, 1.882, 1.527, 1.217, 0.951, 0.73, 0.552, 0.419, 0.331, 0.286,
+            0.286, 0.331, 0.419, 0.552, 0.73, 0.951, 1.217, 1.527, 1.882, 2.281,
+          ],
+          [
+            2.274, 1.875, 1.521, 1.21, 0.945, 0.723, 0.546, 0.413, 0.324, 0.28,
+            0.28, 0.324, 0.413, 0.546, 0.723, 0.945, 1.21, 1.521, 1.875, 2.274,
+          ],
+          [
+            2.267, 1.868, 1.514, 1.204, 0.938, 0.716, 0.539, 0.406, 0.317,
+            0.273, 0.273, 0.317, 0.406, 0.539, 0.716, 0.938, 1.204, 1.514,
+            1.868, 2.267,
+          ],
+          [
+            2.261, 1.862, 1.507, 1.197, 0.931, 0.709, 0.532, 0.399, 0.31, 0.266,
+            0.266, 0.31, 0.399, 0.532, 0.709, 0.931, 1.197, 1.507, 1.862, 2.261,
+          ],
+          [
+            2.254, 1.855, 1.5, 1.19, 0.924, 0.703, 0.525, 0.392, 0.304, 0.259,
+            0.259, 0.304, 0.392, 0.525, 0.703, 0.924, 1.19, 1.5, 1.855, 2.254,
+          ],
+          [
+            2.247, 1.848, 1.494, 1.183, 0.917, 0.696, 0.518, 0.386, 0.297,
+            0.253, 0.253, 0.297, 0.386, 0.518, 0.696, 0.917, 1.183, 1.494,
+            1.848, 2.247,
+          ],
+          [
+            2.24, 1.841, 1.487, 1.177, 0.911, 0.689, 0.512, 0.379, 0.29, 0.246,
+            0.246, 0.29, 0.379, 0.512, 0.689, 0.911, 1.177, 1.487, 1.841, 2.24,
+          ],
+          [
+            2.233, 1.835, 1.48, 1.17, 0.904, 0.682, 0.505, 0.372, 0.283, 0.239,
+            0.239, 0.283, 0.372, 0.505, 0.682, 0.904, 1.17, 1.48, 1.835, 2.233,
+          ],
+          [
+            2.227, 1.828, 1.473, 1.163, 0.897, 0.675, 0.498, 0.365, 0.277,
+            0.232, 0.232, 0.277, 0.365, 0.498, 0.675, 0.897, 1.163, 1.473,
+            1.828, 2.227,
+          ],
+          [
+            2.22, 1.821, 1.466, 1.156, 0.89, 0.669, 0.491, 0.358, 0.27, 0.225,
+            0.225, 0.27, 0.358, 0.491, 0.669, 0.89, 1.156, 1.466, 1.821, 2.22,
+          ],
+          [
+            2.213, 1.814, 1.46, 1.149, 0.883, 0.662, 0.485, 0.352, 0.263, 0.219,
+            0.219, 0.263, 0.352, 0.485, 0.662, 0.883, 1.149, 1.46, 1.814, 2.213,
+          ],
+          [
+            2.206, 1.807, 1.453, 1.143, 0.877, 0.655, 0.478, 0.345, 0.256,
+            0.212, 0.212, 0.256, 0.345, 0.478, 0.655, 0.877, 1.143, 1.453,
+            1.807, 2.206,
+          ],
+          [
+            2.2, 1.801, 1.446, 1.136, 0.87, 0.648, 0.471, 0.338, 0.249, 0.205,
+            0.205, 0.249, 0.338, 0.471, 0.648, 0.87, 1.136, 1.446, 1.801, 2.2,
+          ],
+        ],
+      };
+      function renderVolatilitySurface() {
+        const targetDiv = document.getElementById("surface-plot");
+        if (!targetDiv) return;
+        if (chartInitialized) {
+          Plotly.Plots.resize(targetDiv);
+          return;
+        }
+        var trace = {
+          type: "surface",
+          x: modelData.strikes,
+          y: modelData.expirations,
+          z: modelData.iv_matrix,
+          colorscale: "Coolwarm",
+          showscale: true,
+          colorbar: {
+            title: { text: "IV", side: "right" },
+            thickness: 12,
+            len: 0.8,
+          },
+        };
+        var layout = {
+          autosize: true,
+          margin: { l: 0, r: 0, b: 0, t: 0 },
+          scene: {
+            xaxis: { title: "Strike" },
+            yaxis: { title: "Expiration" },
+            zaxis: { title: "Volatility" },
+          },
+        };
+        Plotly.newPlot(targetDiv, [trace], layout, { responsive: true });
+        chartInitialized = true;
+      }
+      function switchResourceTab(tabId) {
+        // Toggle sub-panel layout visibility states
+        document.querySelectorAll(".sub-content-panel").forEach((panel) => {
+          panel.classList.toggle(
+            "sub-active",
+            panel.id === "sub-view-" + tabId
+          );
+        });
+        // Highlight selected tab row element button
+        document.querySelectorAll(".resource-tab-btn").forEach((btn) => {
+          const isTarget = btn
+            .getAttribute("onclick")
+            .includes("'" + tabId + "'");
+          btn.classList.toggle("tab-active", isTarget);
+        });
+        // 3D Plotly rendering when mounting the Model section container
+        if (tabId === "models") {
+          setTimeout(renderVolatilitySurface, 100);
+        }
+      }
+      function showPage() {
+        const currentHash = location.hash || "#home";
+        const baseId = currentHash.substring(1);
+        const exists = document.getElementById(baseId);
+        const finalActiveId = exists ? baseId : "home";
+        document.querySelectorAll(".page").forEach((page) => {
+          page.classList.toggle("active", page.id === finalActiveId);
+        });
+        // Ensure 3D surface plot is safely evaluated if directly refreshing on the page view
+        if (finalActiveId === "Resources") {
+          const activeSubPanel = document.querySelector(
+            ".sub-content-panel.sub-active"
+          );
+          if (activeSubPanel && activeSubPanel.id === "sub-view-models") {
+            setTimeout(renderVolatilitySurface, 100);
+          }
+        }
+      }
+      window.addEventListener("hashchange", showPage);
+      showPage();
+      // Sidebar panel transition
+      document.querySelectorAll(".panel-content a").forEach((link) => {
+        link.addEventListener("click", () => {
+          const panel = document.getElementById("sidePanel");
+          if (panel) {
+            panel.classList.add("collapsed");
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
